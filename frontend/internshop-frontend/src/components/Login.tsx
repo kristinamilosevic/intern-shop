@@ -35,9 +35,7 @@ const Login: React.FC = () => {
       localStorage.setItem("username", data.user.username);
 
       setSuccess("Login successful!");
-
       navigate("/");
-
       window.dispatchEvent(new Event("storage"));
     } catch (err) {
       setError("Error connecting to the server");
@@ -45,44 +43,15 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "60px auto",
-        padding: "30px",
-        backgroundColor: "#F6F0F0",
-        borderRadius: "12px",
-        boxShadow: "0 6px 18px rgba(189,179,149,0.3)",
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        color: "#5C533F",
-      }}
-    >
-      <h2 style={{ textAlign: "center", marginBottom: "25px", fontWeight: "700" }}>
-        Login
-      </h2>
+    <div className="max-w-[400px] mx-auto my-[60px] p-[30px] bg-[#F6F0F0] rounded-[12px] shadow-[0_6px_18px_rgba(189,179,149,0.3)] text-[#5C533F] font-sans">
+      <h2 className="text-center mb-[25px] font-bold text-2xl">Login</h2>
 
       {error && (
-        <p
-          style={{
-            color: "#D32F2F",
-            textAlign: "center",
-            marginBottom: "20px",
-            fontWeight: "600",
-          }}
-        >
-          {error}
-        </p>
+        <p className="text-center text-[#D32F2F] mb-[20px] font-semibold">{error}</p>
       )}
 
       {success && (
-        <p
-          style={{
-            color: "#388E3C",
-            textAlign: "center",
-            marginBottom: "20px",
-            fontWeight: "600",
-          }}
-        >
+        <p className="text-center text-[#388E3C] mb-[20px] font-semibold">
           {success}
         </p>
       )}
@@ -90,7 +59,7 @@ const Login: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <label
           htmlFor="username"
-          style={{ fontWeight: "600", display: "block", marginBottom: "6px" }}
+          className="font-semibold block mb-[6px]"
         >
           Username
         </label>
@@ -101,25 +70,12 @@ const Login: React.FC = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-          style={{
-            width: "100%",
-            padding: "10px 12px",
-            marginBottom: "18px",
-            borderRadius: "8px",
-            border: "1.5px solid #D5C7A3",
-            backgroundColor: "#F2E2B1",
-            fontSize: "1rem",
-            color: "#5C533F",
-            outline: "none",
-            transition: "border-color 0.3s",
-          }}
-          onFocus={(e) => (e.currentTarget.style.borderColor = "#BDB395")}
-          onBlur={(e) => (e.currentTarget.style.borderColor = "#D5C7A3")}
+          className="w-full p-[10px] mb-[18px] rounded-[8px] border-[1.5px] border-[#D5C7A3] bg-[#F2E2B1] text-[#5C533F] text-base focus:outline-none focus:border-[#BDB395] transition-colors"
         />
 
         <label
           htmlFor="password"
-          style={{ fontWeight: "600", display: "block", marginBottom: "6px" }}
+          className="font-semibold block mb-[6px]"
         >
           Password
         </label>
@@ -130,43 +86,12 @@ const Login: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          style={{
-            width: "100%",
-            padding: "10px 12px",
-            marginBottom: "25px",
-            borderRadius: "8px",
-            border: "1.5px solid #D5C7A3",
-            backgroundColor: "#F2E2B1",
-            fontSize: "1rem",
-            color: "#5C533F",
-            outline: "none",
-            transition: "border-color 0.3s",
-          }}
-          onFocus={(e) => (e.currentTarget.style.borderColor = "#BDB395")}
-          onBlur={(e) => (e.currentTarget.style.borderColor = "#D5C7A3")}
+          className="w-full p-[10px] mb-[25px] rounded-[8px] border-[1.5px] border-[#D5C7A3] bg-[#F2E2B1] text-[#5C533F] text-base focus:outline-none focus:border-[#BDB395] transition-colors"
         />
 
         <button
           type="submit"
-          style={{
-            width: "100%",
-            backgroundColor: "#BDB395",
-            color: "#F6F0F0",
-            fontWeight: "700",
-            fontSize: "1.1rem",
-            padding: "12px 0",
-            border: "none",
-            borderRadius: "10px",
-            cursor: "pointer",
-            boxShadow: "0 5px 12px rgba(189,179,149,0.6)",
-            transition: "background-color 0.3s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#8C7B55";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#BDB395";
-          }}
+          className="w-full bg-[#BDB395] text-[#F6F0F0] font-bold text-[1.1rem] py-[12px] rounded-[10px] cursor-pointer shadow-[0_5px_12px_rgba(189,179,149,0.6)] transition-colors duration-300 hover:bg-[#8C7B55]"
         >
           Login
         </button>

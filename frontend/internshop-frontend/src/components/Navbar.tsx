@@ -32,51 +32,44 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        backgroundColor: "#F2E2B1",
-        padding: "10px 20px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        zIndex: 1000,
-        boxShadow: "0px 2px 5px rgba(0,0,0,0.1)",
-      }}
-    >
+    <nav className="fixed top-0 left-0 w-full bg-[#F2E2B1] px-5 py-2 flex justify-between items-center z-[1000] shadow-md">
       <Link
         to="/"
-        style={{
-          color: "#BDB395",
-          fontWeight: "bold",
-          textDecoration: "none",
-          fontSize: "20px",
-        }}
+        className="text-[#BDB395] font-bold text-lg no-underline"
       >
         Sell&Buy
       </Link>
 
-      <div style={{ paddingRight: "40px" }}>
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+      <div className="pr-10">
+        <div className="flex items-center gap-3">
           {user ? (
             <>
-              <span style={{ color: "#BDB395" }}>loggedin: {user}</span>
-              <Link to="/add" style={linkStyle}>
-               + New Listing
+              <span className="text-[#BDB395]">loggedin: {user}</span>
+              <Link
+                to="/add"
+                className="bg-[#D5C7A3] text-[#F6F0F0] px-3 py-1 rounded no-underline hover:bg-[#b0a67e] transition"
+              >
+                + New Listing
               </Link>
-              <button onClick={handleLogout} style={buttonStyle}>
+              <button
+                onClick={handleLogout}
+                className="bg-[#BDB395] text-[#F6F0F0] px-3 py-1 rounded cursor-pointer hover:bg-[#a09a73] transition border-none"
+              >
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" style={linkStyle}>
+              <Link
+                to="/login"
+                className="bg-[#D5C7A3] text-[#F6F0F0] px-3 py-1 rounded no-underline hover:bg-[#b0a67e] transition"
+              >
                 Login
               </Link>
-              <Link to="/register" style={linkStyle}>
+              <Link
+                to="/register"
+                className="bg-[#D5C7A3] text-[#F6F0F0] px-3 py-1 rounded no-underline hover:bg-[#b0a67e] transition"
+              >
                 Sign Up
               </Link>
             </>
@@ -85,23 +78,6 @@ const Navbar: React.FC = () => {
       </div>
     </nav>
   );
-};
-
-const linkStyle: React.CSSProperties = {
-  textDecoration: "none",
-  color: "#F6F0F0",
-  backgroundColor: "#D5C7A3",
-  padding: "6px 12px",
-  borderRadius: "5px",
-};
-
-const buttonStyle: React.CSSProperties = {
-  backgroundColor: "#BDB395",
-  color: "#F6F0F0",
-  border: "none",
-  padding: "6px 12px",
-  borderRadius: "5px",
-  cursor: "pointer",
 };
 
 export default Navbar;

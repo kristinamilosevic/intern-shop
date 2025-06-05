@@ -3,75 +3,24 @@ import homeImage from "../assets/home.jpg";
 
 const Home: React.FC = () => {
   return (
-    <div
-      style={{
-        maxWidth: "900px",
-        margin: "60px auto",
-        padding: "20px",
-        display: "flex",
-        alignItems: "center",
-        gap: "40px",
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        borderRadius: "12px",
-      }}
-    >
+    <div className="max-w-[900px] mx-auto my-[60px] p-5 flex items-center gap-[40px] font-sans rounded-[12px]">
       <img
         src={homeImage}
         alt="Marketplace"
-        style={{
-          width: "500px",
-          height: "auto",
-          objectFit: "cover",
-          flexShrink: 0,
-        }}
+        className="w-[500px] h-auto object-cover flex-shrink-0"
       />
-      <div style={{ flex: 1, textAlign: "left", color: "#5C533F" }}>
-        <h1
-          style={{
-            fontSize: "3rem",
-            marginBottom: "20px",
-            fontWeight: "700",
-            color: "#BDB395",
-          }}
-        >
-          Sell&Buy
-        </h1>
-        <p
-          style={{
-            fontSize: "1.8rem",
-            marginBottom: "25px",
-            fontWeight: "600",
-            color: "#D5C7A3",
-          }}
-        >
+      <div className="flex-1 text-left text-[#5C533F]">
+        <h1 className="text-[3rem] mb-[20px] font-bold text-[#BDB395]">Sell&Buy</h1>
+        <p className="text-[1.8rem] mb-[25px] font-semibold text-[#D5C7A3]">
           Your trusted marketplace
         </p>
-        <p
-          style={{
-            fontSize: "1.2rem",
-            lineHeight: "1.6",
-            marginBottom: "30px",
-            color: "#8C7B55",
-          }}
-        >
+        <p className="text-[1.2rem] leading-[1.6] mb-[30px] text-[#8C7B55]">
           Welcome to Sell&Buy! Find amazing deals or sell your items easily and
           securely. Join thousands of satisfied users and start trading today!
         </p>
         <button
           onClick={() => (window.location.href = "/register")}
-          style={{
-            backgroundColor: "#BDB395",
-            color: "#F6F0F0",
-            border: "none",
-            padding: "14px 28px",
-            borderRadius: "8px",
-            fontSize: "1.1rem",
-            cursor: "pointer",
-            boxShadow: "0 4px 10px rgba(189,179,149,0.6)",
-            transition: "background-color 0.3s ease",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#D5C7A3")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#BDB395")}
+          className="bg-[#BDB395] text-[#F6F0F0] border-none px-7 py-[14px] rounded-[8px] text-[1.1rem] cursor-pointer shadow-[0_4px_10px_rgba(189,179,149,0.6)] transition-colors duration-300 hover:bg-[#D5C7A3]"
         >
           Sign Up Now
         </button>
