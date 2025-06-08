@@ -34,6 +34,15 @@ const Login: React.FC = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.username);
 
+      const userResponse = await fetch(`http://localhost:8080/api/users/by-username/${data.user.username}`);
+      if (userResponse.ok) {
+        const userData = await userResponse.json();
+        localStorage.setItem("userId", userData.id.toString());
+        console.log("User ID saved to localStorage:", userData.id);
+      } else {
+        console.error("Failed to fetch user ID");
+      }
+
       setSuccess("Login successful!");
       navigate("/");
       window.dispatchEvent(new Event("storage"));
@@ -57,10 +66,7 @@ const Login: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit}>
-        <label
-          htmlFor="username"
-          className="font-semibold block mb-[6px]"
-        >
+        <label htmlFor="username" className="font-semibold block mb-[6px]">
           Username
         </label>
         <input
@@ -73,10 +79,7 @@ const Login: React.FC = () => {
           className="w-full p-[10px] mb-[18px] rounded-[8px] border-[1.5px] border-[#D5C7A3] bg-[#F2E2B1] text-[#5C533F] text-base focus:outline-none focus:border-[#BDB395] transition-colors"
         />
 
-        <label
-          htmlFor="password"
-          className="font-semibold block mb-[6px]"
-        >
+        <label htmlFor="password" className="font-semibold block mb-[6px]">
           Password
         </label>
         <input

@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Register from "./components/Register";
 import Login from "./components/Login";
-// import AddAd from "./components/AddAd";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
 
@@ -16,7 +15,6 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/add" element={<AddAd />} /> */}
           <Route path="*" element={<div>Stranica nije pronađena.</div>} />
         </Routes>
       </div>

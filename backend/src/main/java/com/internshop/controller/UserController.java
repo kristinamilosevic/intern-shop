@@ -41,4 +41,13 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/by-username/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
+    }
 }

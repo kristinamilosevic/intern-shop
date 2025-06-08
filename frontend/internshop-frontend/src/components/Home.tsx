@@ -1,7 +1,20 @@
 import React from "react";
 import homeImage from "../assets/home.jpg";
+import AdTable from "./AdsTable"; 
 
 const Home: React.FC = () => {
+  const isLoggedIn = !!localStorage.getItem("token"); 
+  const currentUserId = Number(localStorage.getItem("userId")); 
+
+  if (isLoggedIn) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <h1 className="text-2xl font-bold mb-4 text-[#BDB395]">All Ads</h1>
+        <AdTable currentUserId={currentUserId} />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[900px] mx-auto my-[60px] p-5 flex items-center gap-[40px] font-sans rounded-[12px]">
       <img
@@ -20,8 +33,7 @@ const Home: React.FC = () => {
         </p>
         <button
           onClick={() => (window.location.href = "/register")}
-          className="bg-[#BDB395] text-[#F6F0F0] border-none px-7 py-[14px] rounded-[8px] text-[1.1rem] cursor-pointer shadow-[0_4px_10px_rgba(189,179,149,0.6)] transition-colors duration-300 hover:bg-[#D5C7A3]"
-        >
+          className="bg-[#BDB395] text-[#F6F0F0] border-none px-7 py-[14px] rounded-[8px] text-[1.1rem] cursor-pointer shadow-[0_4px_10px_rgba(189,179,149,0.6)] transition-colors duration-300 hover:bg-[#D5C7A3]">
           Sign Up Now
         </button>
       </div>
