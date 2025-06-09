@@ -5,6 +5,7 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
+import AdDetail from "./components/AdDetail";
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/adDetail/:id" element={<AdDetail />} />
           <Route path="*" element={<div>Stranica nije pronađena.</div>} />
         </Routes>
       </div>
