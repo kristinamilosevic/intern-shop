@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-        import java.util.HashMap;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +34,8 @@ public class AdController {
     ) {
         try {
             Pageable paging = PageRequest.of(page, size);
-            Page<Ad> pageAds = adService.getAllAdsPaginated(paging);
+            Page<Ad> pageAds = adService
+                    .getAllActiveAdsPaginated(paging);
 
             Map<String, Object> response = new HashMap<>();
             response.put("ads", pageAds.getContent());
@@ -48,5 +49,31 @@ public class AdController {
         }
     }
 
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<?> deactivateAd(@PathVariable Long id) {
+        boolean success = adService.deactivateAd(id);
+        if (success) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Ad> getAdById(@PathVariable Long id) {
+        return adService.getAdById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Ad> updateAd(@PathVariable Long id, @RequestBody Ad updatedAd) {
+        return adService.updateAd(id, updatedAd)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 }
+
+

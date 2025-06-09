@@ -8,7 +8,7 @@ interface Props {
   onSave: (ad: Ad) => void;
 }
 
-const CreateAd: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
+const AdForm: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
   const [formData, setFormData] = useState<Partial<Ad>>({});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -33,22 +33,19 @@ const CreateAd: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  
-    let imageUrl = "";
-    if (imageFile) {
-      imageUrl = imageFile.name;
-    }
-  
+
+    const imageUrl = imageFile ? imageFile.name : "";
     const userData = localStorage.getItem("userId");
 
-    const newAd = {
+    const adPayload: Ad = {
+      id: null,
       title: formData.title || "",
       description: formData.description || "",
       price: Number(formData.price) || 0,
       city: formData.city || "",
       category: formData.category || "",
       datePosted: new Date().toISOString(),
-      imageUrl: imageUrl,  
+      imageUrl,
       user: { id: userData },
     };
 
@@ -58,7 +55,7 @@ const CreateAd: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newAd),
+        body: JSON.stringify(adPayload),
       });
 
       if (!response.ok) {
@@ -66,7 +63,6 @@ const CreateAd: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
       }
 
       const savedAd: Ad = await response.json();
-
       onSave(savedAd);
       setFormData({});
       setImageFile(null);
@@ -146,7 +142,7 @@ const CreateAd: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
           </option>
           {Categories.map((cat) => (
             <option key={cat} value={cat}>
-              {cat.charAt(0) + cat.slice(1).toLowerCase()}
+              {cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase()}
             </option>
           ))}
         </select>
@@ -155,7 +151,6 @@ const CreateAd: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
           type="file"
           accept="image/*"
           onChange={handleImageChange}
-          required
           className="w-full mb-4"
           disabled={loading}
         />
@@ -182,4 +177,4 @@ const CreateAd: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
   );
 };
 
-export default CreateAd;
+export default AdForm;

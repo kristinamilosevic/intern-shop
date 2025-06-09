@@ -22,8 +22,34 @@ export async function fetchAds(page: number): Promise<{ ads: Ad[]; totalPages: n
   
 
 export async function deleteAd(id: number): Promise<void> {
-  const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+  const response = await fetch(`${API_URL}/${id}/deactivate`, {
+    method: "PUT",
+  });
+
   if (!response.ok) {
-    throw new Error("Failed to delete ad");
+    throw new Error("Failed to logically delete ad");
   }
 }
+
+export async function updateAd(ad: Ad): Promise<Ad> {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`/api/ads/${ad.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(ad),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to update ad: ${response.status} ${response.statusText} - ${errorText}`);
+  }
+
+  return response.json();
+}
+
+  
+  
