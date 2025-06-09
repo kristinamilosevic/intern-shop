@@ -1,12 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import homeImage from "../assets/home.jpg";
-import AdTable from "./AdsTable"; 
+import AdTable from "./AdsTable";
+import { fetchUserIdByUsername } from "../services/userService";
 
 const Home: React.FC = () => {
-  const isLoggedIn = !!localStorage.getItem("token"); 
-  const currentUserId = Number(localStorage.getItem("userId")); 
+  const isLoggedIn = !!localStorage.getItem("token");
+  const username = localStorage.getItem("username");
 
-  if (isLoggedIn) {
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserId = async () => {
+      if (!username) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const userId = await fetchUserIdByUsername(username); 
+        setCurrentUserId(userId);
+      } catch (error) {
+        console.error("Greška pri dohvatanju ID-ja korisnika:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchUserId();
+    } else {
+      setLoading(false);
+    }
+  }, [isLoggedIn, username]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[60vh] text-[#BDB395] font-semibold text-xl">
+        Loading...
+      </div>
+    );
+  }
+
+  if (isLoggedIn && currentUserId !== null) {
     return (
       <div className="container mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold mb-4 text-[#BDB395]">All Ads</h1>
@@ -33,7 +69,8 @@ const Home: React.FC = () => {
         </p>
         <button
           onClick={() => (window.location.href = "/register")}
-          className="bg-[#BDB395] text-[#F6F0F0] border-none px-7 py-[14px] rounded-[8px] text-[1.1rem] cursor-pointer shadow-[0_4px_10px_rgba(189,179,149,0.6)] transition-colors duration-300 hover:bg-[#D5C7A3]">
+          className="bg-[#BDB395] text-[#F6F0F0] border-none px-7 py-[14px] rounded-[8px] text-[1.1rem] cursor-pointer shadow-[0_4px_10px_rgba(189,179,149,0.6)] transition-colors duration-300 hover:bg-[#D5C7A3]"
+        >
           Sign Up Now
         </button>
       </div>

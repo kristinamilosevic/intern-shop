@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Ad } from "../models/Ad";
 import { Categories } from "../models/Categories";
+import { fetchUserIdByUsername } from "../services/userService";
 
 interface Props {
   isOpen: boolean;
@@ -33,23 +34,29 @@ const AdForm: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+  
     const imageUrl = imageFile ? imageFile.name : "";
-    const userData = localStorage.getItem("userId");
-
-    const adPayload: Ad = {
-      id: null,
-      title: formData.title || "",
-      description: formData.description || "",
-      price: Number(formData.price) || 0,
-      city: formData.city || "",
-      category: formData.category || "",
-      datePosted: new Date().toISOString(),
-      imageUrl,
-      user: { id: userData },
-    };
-
+    const username = localStorage.getItem("username");
+  
     try {
+      if (!username) {
+        throw new Error("Nema korisničkog imena u localStorage-u.");
+      }
+  
+      const userId = await fetchUserIdByUsername(username);
+  
+      const adPayload: Ad = {
+        id: null,
+        title: formData.title || "",
+        description: formData.description || "",
+        price: Number(formData.price) || 0,
+        city: formData.city || "",
+        category: formData.category || "",
+        datePosted: new Date().toISOString(),
+        imageUrl,
+        user: { id: userId },
+      };
+  
       const response = await fetch("/api/ads", {
         method: "POST",
         headers: {
@@ -57,11 +64,11 @@ const AdForm: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
         },
         body: JSON.stringify(adPayload),
       });
-
+  
       if (!response.ok) {
         throw new Error("Greška prilikom čuvanja oglasa.");
       }
-
+  
       const savedAd: Ad = await response.json();
       onSave(savedAd);
       setFormData({});
@@ -72,7 +79,7 @@ const AdForm: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   if (!isOpen) return null;
 
