@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Button from "../components/Buttons";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -33,15 +34,6 @@ const Login: React.FC = () => {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.username);
-
-      const userResponse = await fetch(`http://localhost:8080/api/users/by-username/${data.user.username}`);
-      if (userResponse.ok) {
-        const userData = await userResponse.json();
-        localStorage.setItem("userId", userData.id.toString());
-        console.log("User ID saved to localStorage:", userData.id);
-      } else {
-        console.error("Failed to fetch user ID");
-      }
 
       setSuccess("Login successful!");
       navigate("/");
@@ -92,12 +84,14 @@ const Login: React.FC = () => {
           className="w-full p-[10px] mb-[25px] rounded-[8px] border-[1.5px] border-[#D5C7A3] bg-[#F2E2B1] text-[#5C533F] text-base focus:outline-none focus:border-[#BDB395] transition-colors"
         />
 
-        <button
+        <Button
           type="submit"
-          className="w-full bg-[#BDB395] text-[#F6F0F0] font-bold text-[1.1rem] py-[12px] rounded-[10px] cursor-pointer shadow-[0_5px_12px_rgba(189,179,149,0.6)] transition-colors duration-300 hover:bg-[#8C7B55]"
+          variant="primary" 
+          size="large"     
+          className="w-full font-bold text-[1.1rem] py-[12px] rounded-[10px] cursor-pointer shadow-[0_5px_12px_rgba(189,179,149,0.6)]" // Dodajemo specifične klase
         >
           Login
-        </button>
+        </Button>
       </form>
     </div>
   );

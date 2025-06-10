@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Ad } from "../models/Ad";
 import { fetchAdById, deleteAd } from "../services/adService";
 import { fetchUserIdByUsername } from "../services/userService";
+import Button from "../components/Buttons";
 
 const AdDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -104,25 +105,27 @@ const AdDetail: React.FC = () => {
           </p>
           <p className="flex items-center justify-start space-x-3">
             <strong className="w-24">Phone:</strong>
-            <span>{ad.user?.phoneNumber || "Not provided"}</span>
+            <span>{ad.user?.phone || "Not provided"}</span>
           </p>
         </div>
       </div>
 
       {isOwner && (
         <div className="mt-10 flex space-x-4 justify-end">
-          <button
-            className="bg-[#D5C7A3] text-[#5C533F] px-6 py-3 rounded-lg font-semibold shadow hover:bg-[#BDB395] transition-colors duration-200"
+          <Button
+            variant="primary" 
+            size="medium"
             onClick={() => navigate(`/ads/edit/${ad.id}`)}
           >
             Edit
-          </button>
-          <button
-            className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-red-600 transition-colors duration-200"
+          </Button>
+          <Button
+            variant="danger"
+            size="medium"
             onClick={handleDelete}
           >
             Delete
-          </button>
+          </Button>
         </div>
       )}
     </div>

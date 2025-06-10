@@ -1,4 +1,5 @@
 export interface UserProps {
+  id?: number;
   username?: string;
   password?: string;
   registrationDate?: string;
@@ -6,20 +7,15 @@ export interface UserProps {
 }
 
 export class User {
-  username: string;
-  password: string;
-  registrationDate: string;
-  phone: string;
+  id: number = 0;
+  username: string = "";
+  password: string = "";
+  registrationDate: string = "";
+  phone: string = "";
 
-  constructor({
-    username = "",
-    password = "",
-    registrationDate = "",
-    phone = ""
-  }: UserProps = {}) {
-    this.username = username;
-    this.password = password;
-    this.registrationDate = registrationDate;
-    this.phone = phone;
+  static fromProps(props: UserProps): User {
+    const user = new User();
+    Object.assign(user, props);
+    return user;
   }
 }

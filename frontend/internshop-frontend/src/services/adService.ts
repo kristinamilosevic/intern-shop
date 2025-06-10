@@ -25,7 +25,7 @@ export async function fetchAds(page: number): Promise<{ ads: Ad[]; totalPages: n
   }
 
   return {
-    ads: data.ads.map((ad: any) => new Ad(ad)),
+    ads: data.ads,
     totalPages: data.totalPages ?? 1
   };
 }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Ad } from "../models/Ad";
 import { Categories } from "../models/Categories";
 import { fetchUserIdByUsername } from "../services/userService";
+import Button from "../components/Buttons";
 
 interface Props {
   isOpen: boolean;
@@ -54,7 +55,13 @@ const AdForm: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
         category: formData.category || "",
         datePosted: new Date().toISOString(),
         imageUrl,
-        user: { id: userId },
+        user: {
+          id: userId,
+          username: "",
+          password: "",
+          registrationDate: "",
+          phone: ""
+        },
       };
   
       const response = await fetch("/api/ads", {
@@ -163,21 +170,23 @@ const AdForm: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
         />
 
         <div className="flex justify-end space-x-3">
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="medium"
             onClick={onClose}
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
             disabled={loading}
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            className="bg-[#D5C7A3] text-[#F6F0F0] px-4 py-2 rounded hover:bg-[#BDB395]"
+            variant="secondary"
+            size="medium"
             disabled={loading}
           >
             {loading ? "Saving..." : "Save Ad"}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
