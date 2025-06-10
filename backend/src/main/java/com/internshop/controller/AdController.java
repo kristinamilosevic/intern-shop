@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 
 @RestController
 @RequestMapping("/api/ads")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AdController {
 
     private final AdService adService;
