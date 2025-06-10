@@ -19,15 +19,15 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<Categories | null>(null);
-
+  const [searchTitle, setSearchTitle] = useState<string>("");
 
   useEffect(() => {
-    loadAds(currentPage, selectedCategory);
-  }, [currentPage, selectedCategory]);
+    loadAds(currentPage, selectedCategory, searchTitle);
+  }, [currentPage, selectedCategory, searchTitle]);
 
-  const loadAds = async (page: number, selectedCategory?: Categories | null) => {
+  const loadAds = async (page: number, selectedCategory?: Categories | null, title?: string) => {
     try {
-      const { ads, totalPages } = await fetchAds(page, selectedCategory);
+      const { ads, totalPages } = await fetchAds(page, selectedCategory, title);
       setAds(ads);
       setTotalPages(totalPages);
     } catch (error) {
@@ -38,7 +38,7 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
   const handleDelete = async (id: number) => {
     try {
       await deleteAd(id);
-      loadAds(currentPage);
+      loadAds(currentPage, selectedCategory, searchTitle);
     } catch (error) {
       console.error("Error deleting ad:", error);
     }
@@ -59,7 +59,7 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
     try {
       await updateAd(selectedAd);
       handleCloseModal();
-      loadAds(currentPage);
+      loadAds(currentPage, selectedCategory, searchTitle);
     } catch (error) {
       alert("An error occurred while updating the ad.");
     }
@@ -85,6 +85,10 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
     setSelectedCategory(category)
   }
 
+  const handleTitleChange = (title: string) => {
+    setSearchTitle(title);
+  };
+
   const tableColumns = [
     { label: "Image", value: "imageUrl" },
     { label: "Title", value: "title" },
@@ -100,6 +104,8 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
       <Filters
         onCategoryChange={handleCategoryChange}
         selectedCategory={selectedCategory}
+        onTitleChange={handleTitleChange}
+        searchTitle={searchTitle}
       />
 
       <table className="min-w-full border border-[#D5C7A3] bg-[#F6F0F0] shadow rounded-lg">

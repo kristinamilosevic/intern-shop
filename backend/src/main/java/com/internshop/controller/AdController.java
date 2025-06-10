@@ -34,17 +34,14 @@ public class AdController {
     public ResponseEntity<Map<String, Object>> getAllAds(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size,
-            @RequestParam(required = false) Category category
+            @RequestParam(required = false) Category category,
+            @RequestParam(required = false) String title
     ) {
         try {
             Pageable paging = PageRequest.of(page, size);
             Page<Ad> pageAds;
 
-            if (category != null) {
-                pageAds = adService.getAdsByCategoryAndActivePaginated(category, paging);
-            } else {
-                pageAds = adService.getAllActiveAdsPaginated(paging);
-            }
+            pageAds = adService.getFilteredAds(title, category, paging);
 
             Map<String, Object> response = new HashMap<>();
             response.put("ads", pageAds.getContent());

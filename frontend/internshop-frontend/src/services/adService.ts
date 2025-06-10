@@ -8,12 +8,21 @@ function getAuthHeaders(): HeadersInit {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-export async function fetchAds(page: number, category?: Categories | null): Promise<{ ads: Ad[]; totalPages: number }> {
+export async function fetchAds(
+  page: number,
+  category?: Categories | null,
+  title?: string | null
+): Promise<{ ads: Ad[]; totalPages: number }> {
   let url = `${API_URL}?page=${page}`;
 
   if (category) {
-    url += `&category=${category}`; 
+    url += `&category=${category}`;
   }
+
+  if (title && title.trim() !== "") {
+    url += `&title=${encodeURIComponent(title.trim())}`;
+  }
+
   const response = await fetch(url, {
     headers: {
       ...getAuthHeaders()
