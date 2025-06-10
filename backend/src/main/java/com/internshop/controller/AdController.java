@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class AdController {
 
     @PostMapping
     public ResponseEntity<Ad> createAd(@RequestBody Ad ad) {
+        ad.setPostedDate(LocalDate.now());
         Ad savedAd = adService.saveAd(ad);
         return ResponseEntity.ok(savedAd);
     }

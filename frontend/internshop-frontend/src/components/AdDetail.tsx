@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Ad } from "../models/Ad";
-import { fetchAdById, deleteAd } from "../services/adService";
+import { fetchAdById, deleteAd, updateAd } from "../services/adService";
 import { fetchUserIdByUsername } from "../services/userService";
 import Button from "../components/Buttons";
+import EditAd from "../components/EditAd";
 
 const AdDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,7 +12,7 @@ const AdDetail: React.FC = () => {
   const [ad, setAd] = useState<Ad | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
-
+  const [selectedAdForEdit, setSelectedAdForEdit] = useState<Ad | null>(null);
   const username = localStorage.getItem("username");
 
   useEffect(() => {
@@ -21,22 +22,32 @@ const AdDetail: React.FC = () => {
         const userId = await fetchUserIdByUsername(username);
         setCurrentUserId(userId);
       } catch (error) {
-        console.error("Greška pri dohvatanju korisničkog ID-ja:", error);
+        console.error("Error fetching user ID:", error);
       }
     };
 
     loadUserId();
   }, [username]);
 
-  useEffect(() => {
+  const loadAd = async () => {
     if (!id) return;
+    setLoading(true);
+    try {
+      const fetchedAd = await fetchAdById(Number(id));
+      setAd(fetchedAd);
+      if (selectedAdForEdit && fetchedAd.id === selectedAdForEdit.id) {
+        setSelectedAdForEdit(fetchedAd);
+      }
+    } catch (err) {
+      console.error("Failed to fetch ad:", err);
+      setAd(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchAdById(Number(id))
-      .then(setAd)
-      .catch((err) => {
-        console.error("Failed to fetch ad:", err);
-      })
-      .finally(() => setLoading(false));
+  useEffect(() => {
+    loadAd();
   }, [id]);
 
   const handleDelete = async () => {
@@ -48,8 +59,45 @@ const AdDetail: React.FC = () => {
       await deleteAd(ad.id!);
       navigate("/ads");
     } catch (error) {
-      alert("Error deleting ad");
+      alert("Error deleting ad.");
       console.error(error);
+    }
+  };
+
+  const handleEditClick = (adToEdit: Ad) => {
+    setSelectedAdForEdit(adToEdit);
+  };
+
+  const handleCloseEditModal = () => {
+    setSelectedAdForEdit(null);
+  };
+
+  const handleEditInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    if (!selectedAdForEdit) return;
+    const { name, value } = e.target;
+    setSelectedAdForEdit((prevAd) => ({ ...prevAd!, [name]: value }));
+  };
+
+  const handleEditImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && selectedAdForEdit) {
+      setSelectedAdForEdit((prevAd) => ({ ...prevAd!, imageUrl: file.name }));
+    }
+  };
+
+  const handleEditFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!selectedAdForEdit) return;
+
+    try {
+      await updateAd(selectedAdForEdit);
+      handleCloseEditModal();
+      loadAd();
+    } catch (error) {
+      alert("An error occurred while updating the ad.");
+      console.error("Error updating ad:", error);
     }
   };
 
@@ -57,7 +105,7 @@ const AdDetail: React.FC = () => {
     return <p className="text-center mt-8 text-lg text-gray-600">Loading...</p>;
 
   if (!ad)
-    return <p className="text-center mt-8 text-lg text-red-600">Ad not found</p>;
+    return <p className="text-center mt-8 text-lg text-red-600">Ad not found.</p>;
 
   const isOwner = currentUserId !== null && ad.user?.id === currentUserId;
 
@@ -113,9 +161,9 @@ const AdDetail: React.FC = () => {
       {isOwner && (
         <div className="mt-10 flex space-x-4 justify-end">
           <Button
-            variant="primary" 
+            variant="primary"
             size="medium"
-            onClick={() => navigate(`/ads/edit/${ad.id}`)}
+            onClick={() => handleEditClick(ad)}
           >
             Edit
           </Button>
@@ -127,6 +175,16 @@ const AdDetail: React.FC = () => {
             Delete
           </Button>
         </div>
+      )}
+
+      {selectedAdForEdit && (
+        <EditAd
+          selectedAd={selectedAdForEdit}
+          onClose={handleCloseEditModal}
+          onChange={handleEditInputChange}
+          onImageChange={handleEditImageChange}
+          onSubmit={handleEditFormSubmit}
+        />
       )}
     </div>
   );

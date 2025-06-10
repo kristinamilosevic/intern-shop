@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full bg-[#F2E2B1] px-5 py-2 flex justify-between items-center z-[1000] shadow-md">
+      <nav className="absolute relative top-0 left-0 w-full bg-[#F2E2B1] px-5 py-2 flex justify-between items-center z-[1000] shadow-md">
         <a href="/" className="text-[#BDB395] font-bold text-lg no-underline">
           Sell&Buy
         </a>

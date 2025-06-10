@@ -11,7 +11,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <Navbar />
-      <div style={{ paddingTop: "70px" }}>
+      <div className="my-5">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
