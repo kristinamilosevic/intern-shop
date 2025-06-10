@@ -64,29 +64,21 @@ public class AdService {
 //        return adRepository.findByCategoryAndIsActiveTrue(category, pageable);
 //    }
 //
-//
-//    public Page<Ad> getAdsByCategoryAndActivePaginated(Category category, Pageable pageable) {
-//        return adRepository.findByCategoryAndIsActiveTrue(category, pageable);
-//    }
 
-    // --- New Filter Method using Specifications ---
     public Page<Ad> getFilteredAds(String title, Category category, Pageable pageable) {
         Specification<Ad> spec = (root, query, criteriaBuilder) -> {
             Predicate activePredicate = criteriaBuilder.isTrue(root.get("isActive")); // Always filter by active
 
-            // Initialize with the active predicate
             Predicate combinedPredicate = activePredicate;
 
-            // Add title filter if provided
             if (title != null && !title.trim().isEmpty()) {
                 Predicate titlePredicate = criteriaBuilder.like(
-                        criteriaBuilder.lower(root.get("title")), // Convert title to lowercase
-                        "%" + title.toLowerCase() + "%"           // Convert search term to lowercase and add wildcards
+                        criteriaBuilder.lower(root.get("title")),
+                        "%" + title.toLowerCase() + "%"
                 );
                 combinedPredicate = criteriaBuilder.and(combinedPredicate, titlePredicate);
             }
 
-            // Add category filter if provided
             if (category != null) {
                 Predicate categoryPredicate = criteriaBuilder.equal(root.get("category"), category);
                 combinedPredicate = criteriaBuilder.and(combinedPredicate, categoryPredicate);
