@@ -83,11 +83,11 @@ const EditAd: React.FC<EditAdProps> = ({
               <option value="" disabled>
                 Select category
               </option>
-              {Categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase()}
-                </option>
-              ))}
+            {Object.values(Categories).map((category: string) => (
+              <option key={category} value={category}>
+                  {category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}
+              </option>
+            ))}
             </select>
           </label>
           <label className="block mb-4 text-[#5C533F]">

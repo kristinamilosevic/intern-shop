@@ -1,6 +1,7 @@
 package com.internshop.service;
 
 import com.internshop.model.Ad;
+import com.internshop.model.Category;
 import com.internshop.repository.AdRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,5 +56,9 @@ public class AdService {
             existingAd.setImageUrl(updatedAd.getImageUrl());
             return adRepository.save(existingAd);
         });
+    }
+
+    public Page<Ad> getAdsByCategoryAndActivePaginated(Category category, Pageable pageable) {
+        return adRepository.findByCategoryAndIsActiveTrue(category, pageable);
     }
 }

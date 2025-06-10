@@ -1,12 +1,11 @@
-export const Categories = [
-    "CLOTHING",
-    "TOOLS",
-    "SPORTS",
-    "ACCESSORIES",
-    "FURNITURE",
-    "PETS",
-    "GAMES",
-    "BOOKS",
-    "TECHNOLOGY"
-  ];
-  
+export enum Categories {
+    CLOTHING = "CLOTHING",
+    TOOLS = "TOOLS",
+    SPORTS = "SPORTS",
+    ACCESSORIES = "ACCESSORIES",
+    FURNITURE = "FURNITURE",
+    PETS = "PETS",
+    GAMES = "GAMES",
+    BOOKS = "BOOKS",
+    TECHNOLOGY = "TECHNOLOGY",
+}

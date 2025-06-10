@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import EditAd from "../components/EditAd";
 import Pagination from "../components/Pagination";
 import Button from "../components/Buttons"; 
+import Filters from "./Filters";
+import { Categories } from "../models/Categories";
 
 interface AdTableProps {
   currentUserId: number;
@@ -16,14 +18,16 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Categories | null>(null);
+
 
   useEffect(() => {
-    loadAds(currentPage);
-  }, [currentPage]);
+    loadAds(currentPage, selectedCategory);
+  }, [currentPage, selectedCategory]);
 
-  const loadAds = async (page: number) => {
+  const loadAds = async (page: number, selectedCategory?: Categories | null) => {
     try {
-      const { ads, totalPages } = await fetchAds(page);
+      const { ads, totalPages } = await fetchAds(page, selectedCategory);
       setAds(ads);
       setTotalPages(totalPages);
     } catch (error) {
@@ -77,6 +81,10 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
     }
   };
 
+  const handleCategoryChange = (category: Categories | null) => {
+    setSelectedCategory(category)
+  }
+
   const tableColumns = [
     { label: "Image", value: "imageUrl" },
     { label: "Title", value: "title" },
@@ -88,6 +96,12 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
 
   return (
     <div className="overflow-x-auto mt-4">
+
+      <Filters
+        onCategoryChange={handleCategoryChange}
+        selectedCategory={selectedCategory}
+      />
+
       <table className="min-w-full border border-[#D5C7A3] bg-[#F6F0F0] shadow rounded-lg">
         <thead className="bg-[#F2E2B1] text-[#5C533F]">
           <tr>

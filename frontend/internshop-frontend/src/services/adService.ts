@@ -1,4 +1,5 @@
 import { Ad } from "../models/Ad";
+import { Categories } from "../models/Categories";
 
 const API_URL = "/api/ads";
 
@@ -7,8 +8,13 @@ function getAuthHeaders(): HeadersInit {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-export async function fetchAds(page: number): Promise<{ ads: Ad[]; totalPages: number }> {
-  const response = await fetch(`${API_URL}?page=${page}`, {
+export async function fetchAds(page: number, category?: Categories | null): Promise<{ ads: Ad[]; totalPages: number }> {
+  let url = `${API_URL}?page=${page}`;
+
+  if (category) {
+    url += `&category=${category}`; 
+  }
+  const response = await fetch(url, {
     headers: {
       ...getAuthHeaders()
     }

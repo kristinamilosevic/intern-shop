@@ -154,11 +154,11 @@ const AdForm: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
           <option value="" disabled>
             Select Category
           </option>
-          {Categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase()}
-            </option>
-          ))}
+            {Object.values(Categories).map((category: string) => (
+              <option key={category} value={category}>
+                  {category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}
+              </option>
+            ))}
         </select>
 
         <input

@@ -1,6 +1,7 @@
 package com.internshop.controller;
 
 import com.internshop.model.Ad;
+import com.internshop.model.Category;
 import com.internshop.service.AdService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +33,18 @@ public class AdController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllAds(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "4") int size
+            @RequestParam(defaultValue = "4") int size,
+            @RequestParam(required = false) Category category
     ) {
         try {
             Pageable paging = PageRequest.of(page, size);
-            Page<Ad> pageAds = adService
-                    .getAllActiveAdsPaginated(paging);
+            Page<Ad> pageAds;
+
+            if (category != null) {
+                pageAds = adService.getAdsByCategoryAndActivePaginated(category, paging);
+            } else {
+                pageAds = adService.getAllActiveAdsPaginated(paging);
+            }
 
             Map<String, Object> response = new HashMap<>();
             response.put("ads", pageAds.getContent());
