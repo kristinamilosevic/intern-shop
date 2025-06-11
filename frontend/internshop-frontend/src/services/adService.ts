@@ -1,7 +1,7 @@
 import { Ad } from "../models/Ad";
 import { Categories } from "../models/Categories";
 
-const API_URL = "/api/ads";
+const API_URL = "http://localhost:8080/api/ads";
 
 function getAuthHeaders(): HeadersInit {
   const token = localStorage.getItem("token");
@@ -11,16 +11,27 @@ function getAuthHeaders(): HeadersInit {
 export async function fetchAds(
   page: number,
   category?: Categories | null,
-  title?: string | null
+  title?: string | null,
+  minPrice?: number | null,
+  maxPrice?: number | null,
+  userId?: number | null 
 ): Promise<{ ads: Ad[]; totalPages: number }> {
   let url = `${API_URL}?page=${page}`;
 
   if (category) {
     url += `&category=${category}`;
   }
-
   if (title && title.trim() !== "") {
     url += `&title=${encodeURIComponent(title.trim())}`;
+  }
+  if (minPrice != null) {
+    url += `&minPrice=${minPrice}`;
+  }
+  if (maxPrice != null) {
+    url += `&maxPrice=${maxPrice}`;
+  }
+  if (userId != null) {
+    url += `&userId=${userId}`;
   }
 
   const response = await fetch(url, {
@@ -35,15 +46,12 @@ export async function fetchAds(
 
   const data = await response.json();
 
-  if (!Array.isArray(data.ads)) {
-    throw new Error("Unexpected data format: ads field is missing or not an array");
-  }
-
   return {
     ads: data.ads,
     totalPages: data.totalPages ?? 1
   };
 }
+
 
 export async function deleteAd(id: number): Promise<void> {
   const response = await fetch(`${API_URL}/${id}/deactivate`, {

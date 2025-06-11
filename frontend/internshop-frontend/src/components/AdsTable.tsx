@@ -5,8 +5,7 @@ import { Link } from "react-router-dom";
 import EditAd from "../components/EditAd";
 import Pagination from "../components/Pagination";
 import Button from "../components/Buttons"; 
-import Filters from "./Filters";
-import { Categories } from "../models/Categories";
+import Filters from "./Filters"
 
 interface AdTableProps {
   currentUserId: number;
@@ -18,27 +17,31 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<Categories | null>(null);
-  const [searchTitle, setSearchTitle] = useState<string>("");
+
 
   useEffect(() => {
-    loadAds(currentPage, selectedCategory, searchTitle);
-  }, [currentPage, selectedCategory, searchTitle]);
+    loadAds(currentPage,);
+  }, [currentPage, ]);  
 
-  const loadAds = async (page: number, selectedCategory?: Categories | null, title?: string) => {
+  const loadAds = async (
+    page: number,
+  ) => {
     try {
-      const { ads, totalPages } = await fetchAds(page, selectedCategory, title);
+      const { ads, totalPages } = await fetchAds(
+        page,
+      );
       setAds(ads);
       setTotalPages(totalPages);
     } catch (error) {
       console.error("Error loading ads:", error);
     }
   };
+  
 
   const handleDelete = async (id: number) => {
     try {
       await deleteAd(id);
-      loadAds(currentPage, selectedCategory, searchTitle);
+      loadAds(currentPage);
     } catch (error) {
       console.error("Error deleting ad:", error);
     }
@@ -59,7 +62,7 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
     try {
       await updateAd(selectedAd);
       handleCloseModal();
-      loadAds(currentPage, selectedCategory, searchTitle);
+      loadAds(currentPage);
     } catch (error) {
       alert("An error occurred while updating the ad.");
     }
@@ -81,14 +84,6 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
     }
   };
 
-  const handleCategoryChange = (category: Categories | null) => {
-    setSelectedCategory(category)
-  }
-
-  const handleTitleChange = (title: string) => {
-    setSearchTitle(title);
-  };
-
   const tableColumns = [
     { label: "Image", value: "imageUrl" },
     { label: "Title", value: "title" },
@@ -96,16 +91,19 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
     { label: "Price", value: "price" },
     { label: "City", value: "city" },
     { label: "Category", value: "category" },
+    { label: "Posted", value: "datePosted" },
   ];
 
   return (
     <div className="overflow-x-auto mt-4">
 
       <Filters
-        onCategoryChange={handleCategoryChange}
-        selectedCategory={selectedCategory}
-        onTitleChange={handleTitleChange}
-        searchTitle={searchTitle}
+        currentPage={currentPage}
+        currentUserId={currentUserId}
+        onAdsFetched={(ads, totalPages) => {
+          setAds(ads);
+          setTotalPages(totalPages);
+        }}
       />
 
       <table className="min-w-full border border-[#D5C7A3] bg-[#F6F0F0] shadow rounded-lg">
@@ -143,28 +141,21 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
                   </Link>
                 </td>
                 <td className="p-3 text-[#5C533F]">{ad.description}</td>
-                <td className="p-3 text-[#5C533F]">
-                  {ad.price ? `$${ad.price}` : "-"}
-                </td>
+                <td className="p-3 text-[#5C533F]">{ad.price ? `$${ad.price}` : "-"}</td>
                 <td className="p-3 text-[#5C533F]">{ad.city || "-"}</td>
                 <td className="p-3 text-[#5C533F]">{ad.category || "-"}</td>
+                <td className="p-3 text-[#5C533F]">
+                  {ad.postedDate ? new Date(ad.postedDate).toLocaleDateString("en-US", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  }) : "-"}
+                </td>
                 <td className="p-3 space-x-2">
                   {isOwner && (
                     <>
-                      <Button
-                        variant="primary" 
-                        size="small"  
-                        onClick={() => handleEditClick(ad)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="danger" 
-                        size="small"  
-                        onClick={() => handleDelete(ad.id!)}
-                      >
-                        Delete
-                      </Button>
+                      <Button variant="primary" size="small" onClick={() => handleEditClick(ad)}>Edit</Button>
+                      <Button variant="danger" size="small" onClick={() => handleDelete(ad.id!)}>Delete</Button>
                     </>
                   )}
                 </td>

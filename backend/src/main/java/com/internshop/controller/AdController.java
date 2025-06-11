@@ -36,13 +36,16 @@ public class AdController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size,
             @RequestParam(required = false) Category category,
-            @RequestParam(required = false) String title
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Long userId
     ) {
         try {
             Pageable paging = PageRequest.of(page, size);
             Page<Ad> pageAds;
 
-            pageAds = adService.getFilteredAds(title, category, paging);
+            pageAds = adService.getFilteredAds(title, category, minPrice, maxPrice, userId, paging);
 
             Map<String, Object> response = new HashMap<>();
             response.put("ads", pageAds.getContent());

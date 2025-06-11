@@ -65,27 +65,37 @@ public class AdService {
 //    }
 //
 
-    public Page<Ad> getFilteredAds(String title, Category category, Pageable pageable) {
+    public Page<Ad> getFilteredAds(String title, Category category, Double minPrice, Double maxPrice, Long userId, Pageable pageable) {
         Specification<Ad> spec = (root, query, criteriaBuilder) -> {
-            Predicate activePredicate = criteriaBuilder.isTrue(root.get("isActive")); // Always filter by active
-
-            Predicate combinedPredicate = activePredicate;
+            Predicate predicate = criteriaBuilder.isTrue(root.get("isActive"));
 
             if (title != null && !title.trim().isEmpty()) {
-                Predicate titlePredicate = criteriaBuilder.like(
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("title")),
                         "%" + title.toLowerCase() + "%"
-                );
-                combinedPredicate = criteriaBuilder.and(combinedPredicate, titlePredicate);
+                ));
             }
 
             if (category != null) {
-                Predicate categoryPredicate = criteriaBuilder.equal(root.get("category"), category);
-                combinedPredicate = criteriaBuilder.and(combinedPredicate, categoryPredicate);
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("category"), category));
             }
 
-            return combinedPredicate;
+            if (minPrice != null) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+            }
+
+            if (maxPrice != null) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+            }
+
+            if (userId != null) {
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("user").get("id"), userId));
+            }
+
+            return predicate;
         };
+
         return adRepository.findAll(spec, pageable);
     }
+
 }
