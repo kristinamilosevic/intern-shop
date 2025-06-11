@@ -28,12 +28,6 @@ public class AdService {
         return adRepository.findAll();
     }
 
-    public Page<Ad> getAllAdsPaginated(Pageable pageable) {
-        return adRepository.findAll(pageable);
-    }
-    public Page<Ad> getAllActiveAdsPaginated(Pageable pageable) {
-        return adRepository.findByIsActiveTrue(pageable);
-    }
     public boolean deactivateAd(Long id) {
         return adRepository.findById(id)
                 .map(ad -> {
@@ -59,11 +53,6 @@ public class AdService {
             return adRepository.save(existingAd);
         });
     }
-
-//    public Page<Ad> getAdsByCategoryAndActivePaginated(Category category, Pageable pageable) {
-//        return adRepository.findByCategoryAndIsActiveTrue(category, pageable);
-//    }
-//
 
     public Page<Ad> getFilteredAds(String title, Category category, Double minPrice, Double maxPrice, Long userId, Pageable pageable) {
         Specification<Ad> spec = (root, query, criteriaBuilder) -> {

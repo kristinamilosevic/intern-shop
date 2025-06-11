@@ -34,7 +34,7 @@ public class AdController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllAds(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "4") int size,
+            @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) Category category,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) Double minPrice,
@@ -42,10 +42,8 @@ public class AdController {
             @RequestParam(required = false) Long userId
     ) {
         try {
-            Pageable paging = PageRequest.of(page, size);
-            Page<Ad> pageAds;
-
-            pageAds = adService.getFilteredAds(title, category, minPrice, maxPrice, userId, paging);
+            Pageable paging = PageRequest.of(page, size, org.springframework.data.domain.Sort.by("postedDate").descending());
+            Page<Ad> pageAds = adService.getFilteredAds(title, category, minPrice, maxPrice, userId, paging);
 
             Map<String, Object> response = new HashMap<>();
             response.put("ads", pageAds.getContent());
@@ -58,6 +56,7 @@ public class AdController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<?> deactivateAd(@PathVariable Long id) {
