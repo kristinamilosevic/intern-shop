@@ -1,7 +1,8 @@
 import { Ad } from "../models/Ad";
 import { Categories } from "../models/Categories";
 
-const API_URL = "http://localhost:8080/api/ads";
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const API_URL = `${BASE_URL}/ads`; 
 
 function getAuthHeaders(): HeadersInit {
   const token = localStorage.getItem("token");

@@ -11,7 +11,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <Navbar />
-      <div className="my-5">
+      <div className="flex flex-col min-h-screen">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
