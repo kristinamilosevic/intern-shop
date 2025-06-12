@@ -59,7 +59,7 @@ const AdForm: React.FC<AdFormProps> = ({ isOpen, onClose, onSave }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={onClose}>
       <form
         onSubmit={handleSubmit}
         className="bg-[#F6F0F0] p-8 rounded-lg w-full max-w-md shadow-lg"

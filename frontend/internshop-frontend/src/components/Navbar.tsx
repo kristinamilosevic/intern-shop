@@ -75,7 +75,7 @@ const Navbar: React.FC = () => {
                   variant="primary"
                   size="small"
                 >
-                  + New Listing
+                  + New Ad
                 </Button>
                 <Button
                   onClick={handleLogout}
