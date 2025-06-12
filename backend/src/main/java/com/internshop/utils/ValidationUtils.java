@@ -29,7 +29,6 @@ public class ValidationUtils {
 
     private static final Pattern USERNAME_WHITE_LIST = Pattern.compile("^[a-zA-Z0-9_.]+$");
     private static final Pattern BLACK_LIST = Pattern.compile("[<>\"';]");
-
     private static final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[0-9]{6,15}$");
 
     public static String validateUsername(String username) {
@@ -70,5 +69,15 @@ public class ValidationUtils {
         }
         return null;
     }
-}
 
+    public static String sanitizeInput(String input) {
+        if (input == null) return null;
+
+        return input
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#x27;");
+    }
+}

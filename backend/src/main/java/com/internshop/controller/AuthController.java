@@ -1,5 +1,6 @@
 package com.internshop.controller;
 
+import com.internshop.dto.UserDTO;
 import com.internshop.model.User;
 import com.internshop.service.UserService;
 import com.internshop.utils.JwtUtil;
@@ -34,24 +35,20 @@ public class AuthController {
         }
 
         User user = userService.findByUsername(username);
-        if (user == null) {
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
 
         String token = jwtUtil.generateToken(user.getUsername());
 
-        Map<String, Object> response = Map.of(
-                "token", token,
-                "user", Map.of(
-                        "username", user.getUsername()
-                )
-        );
+        UserDTO userDto = new UserDTO();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Map.of(
+                "token", token,
+                "user", userDto
+        ));
     }
 
 }
