@@ -49,6 +49,8 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
   
 
   const handleDelete = async (id: number) => {
+    const confirmed = window.confirm("Are you sure you want to delete this ad?");
+    if (!confirmed) return;
     try {
       await deleteAd(id);
       loadAds(currentPage);

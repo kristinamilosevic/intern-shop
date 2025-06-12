@@ -57,7 +57,7 @@ const AdDetail: React.FC = () => {
 
     try {
       await deleteAd(ad.id!);
-      navigate("/ads");
+      navigate("/");
     } catch (error) {
       alert("Error deleting ad.");
       console.error(error);
@@ -93,8 +93,8 @@ const AdDetail: React.FC = () => {
 
     try {
       await updateAd(selectedAdForEdit);
+      await loadAd();
       handleCloseEditModal();
-      loadAd();
     } catch (error) {
       alert("An error occurred while updating the ad.");
       console.error("Error updating ad:", error);
