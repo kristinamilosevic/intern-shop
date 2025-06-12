@@ -110,8 +110,8 @@ const AdDetail: React.FC = () => {
   const isOwner = currentUserId !== null && ad.user?.id === currentUserId;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-6 text-[#5C533F]">
-      <h1 className="text-4xl font-extrabold mb-6 tracking-wide text-center text-[#7D6E45]">
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-6 text-[#8E806A]">
+      <h1 className="text-4xl font-extrabold mb-6 tracking-wide text-center text-[#8E806A]">
         {ad.title}
       </h1>
 
@@ -125,23 +125,23 @@ const AdDetail: React.FC = () => {
 
       <div className="text-center mb-8 text-lg text-gray-700 space-y-1">
         <p>
-          <span className="font-semibold text-[#A08439]">Description:</span>{" "}
+          <span className="font-semibold text-[#8E806A]">Description:</span>{" "}
           {ad.description}
         </p>
         <p>
-          <span className="font-semibold text-[#A08439]">Price:</span>{" "}
+          <span className="font-semibold text-[#8E806A]">Price:</span>{" "}
           {ad.price ? `$${ad.price.toFixed(2)}` : "-"}
         </p>
         <p>
-          <span className="font-semibold text-[#A08439]">City:</span>{" "}
+          <span className="font-semibold text-[#8E806A]">City:</span>{" "}
           {ad.city || "-"}
         </p>
         <p>
-          <span className="font-semibold text-[#A08439]">Category:</span>{" "}
+          <span className="font-semibold text-[#8E806A]">Category:</span>{" "}
           {ad.category || "-"}
         </p>
         <p>
-          <span className="font-semibold text-[#A08439]">Posted Date:</span>{" "}
+          <span className="font-semibold text-[#8E806A]">Posted Date:</span>{" "}
           {ad.postedDate
             ? new Date(ad.postedDate).toLocaleDateString("en-GB", {
                 day: "2-digit",
@@ -152,8 +152,8 @@ const AdDetail: React.FC = () => {
         </p>
       </div>
 
-      <div className="mt-8 p-6 border border-[#D5C7A3] rounded-lg bg-[#FBF9F3] shadow-md max-w-md mx-auto text-[#5C533F]">
-        <h2 className="text-2xl font-semibold mb-4 border-b border-[#D5C7A3] pb-2 text-[#7D6E45] text-center">
+      <div className="mt-8 p-6 border border-[#D5C7A3] rounded-lg bg-[#FBF9F3] shadow-md max-w-md mx-auto text-[#AA8976]">
+        <h2 className="text-2xl font-semibold mb-4 border-b border-[#D5C7A3] pb-2 text-[#8E806A] text-center">
           User Info
         </h2>
         <div className="space-y-4 text-lg max-w-sm mx-auto">

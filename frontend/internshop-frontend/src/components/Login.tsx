@@ -29,7 +29,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="max-w-[400px] mx-auto my-[60px] p-[30px] bg-[#F6F0F0] rounded-[12px] shadow-[0_6px_18px_rgba(189,179,149,0.3)] text-[#5C533F] font-sans">
+    <div className="max-w-[400px] mx-auto my-[60px] p-[30px] bg-[#F6F0F0] rounded-[12px] shadow-[0_6px_18px_rgba(189,179,149,0.3)] text-[#8E806A] font-sans">
       <h2 className="text-center mb-[25px] font-bold text-2xl">Login</h2>
 
       {error && (
@@ -76,7 +76,7 @@ const Login: React.FC = () => {
         <span>Don't have an account? </span>
         <a
           href="/register"
-          className="text-[#388E3C] font-semibold hover:underline"
+          className="text-[#C2B092] font-semibold hover:underline"
         >
           Register
         </a>

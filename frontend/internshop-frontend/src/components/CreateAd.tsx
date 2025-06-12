@@ -13,13 +13,12 @@ interface AdFormProps  {
 }
 
 const AdForm: React.FC<AdFormProps> = ({ isOpen, onClose, onSave }) => {
-  //TODO: Partial is not very common, prepare to explain why you used it
   const [formData, setFormData] = useState<Partial<Ad>>({});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -45,14 +44,13 @@ const AdForm: React.FC<AdFormProps> = ({ isOpen, onClose, onSave }) => {
       const adToSave = { ...formData, imageUrl };
 
       const savedAd = await saveAd(adToSave);
-
       onSave(savedAd);
       setFormData({});
       setImageFile(null);
       onClose();
       navigate("/");
     } catch (err: any) {
-      setError(err.message || "Nepoznata greška.");
+      setError(err.message || "Unknown error.");
     } finally {
       setLoading(false);
     }
@@ -66,7 +64,7 @@ const AdForm: React.FC<AdFormProps> = ({ isOpen, onClose, onSave }) => {
         onSubmit={handleSubmit}
         className="bg-[#F6F0F0] p-8 rounded-lg w-full max-w-md shadow-lg"
       >
-        <h2 className="text-2xl font-bold mb-4 text-[#BDB395]">New Listing</h2>
+        <h2 className="text-2xl font-bold mb-4 text-[#8E806A]">New Listing</h2>
 
         {error && (
           <div className="mb-3 p-2 bg-red-200 text-red-800 rounded">{error}</div>
@@ -124,20 +122,33 @@ const AdForm: React.FC<AdFormProps> = ({ isOpen, onClose, onSave }) => {
           <option value="" disabled>
             Select Category
           </option>
-            {Object.values(Categories).map((category: string) => (
-              <option key={category} value={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}
-              </option>
-            ))}
+          {Object.values(Categories).map((category: string) => (
+            <option key={category} value={category}>
+              {category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}
+            </option>
+          ))}
         </select>
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="w-full mb-4"
-          disabled={loading}
-        />
+        <label className="block mb-3 text-[#5C533F]">
+          Image:
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full mt-1"
+            disabled={loading}
+          />
+        </label>
+
+        {imageFile && (
+          <div className="mb-4">
+            <img
+              src={URL.createObjectURL(imageFile)}
+              alt="Preview"
+              className="h-32 w-32 object-cover rounded"
+            />
+          </div>
+        )}
 
         <div className="flex justify-end space-x-3">
           <Button
@@ -151,7 +162,7 @@ const AdForm: React.FC<AdFormProps> = ({ isOpen, onClose, onSave }) => {
           </Button>
           <Button
             type="submit"
-            variant="secondary"
+            variant="primary"
             size="medium"
             disabled={loading}
           >

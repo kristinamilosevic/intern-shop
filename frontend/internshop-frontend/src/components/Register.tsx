@@ -54,7 +54,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-16 p-8 bg-[#F6F0F0] rounded-xl shadow-lg font-sans text-[#5C533F]">
+    <div className="max-w-md mx-auto mt-16 p-8 bg-[#F6F0F0] rounded-xl shadow-lg font-sans text-[#8E806A]">
       <h2 className="text-center mb-6 font-extrabold text-2xl">Sign Up</h2>
 
       {message && (
@@ -118,7 +118,7 @@ const Register: React.FC = () => {
           <span>Already have an account? </span>
           <a
             href="/login"
-            className="text-[#388E3C] font-semibold hover:underline"
+            className="text-[#C2B092] font-semibold hover:underline"
           >
             Login
           </a>
