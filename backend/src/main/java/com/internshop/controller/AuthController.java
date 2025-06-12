@@ -1,12 +1,9 @@
 package com.internshop.controller;
 
-import com.internshop.dto.UserDTO;
-import com.internshop.model.User;
-import com.internshop.service.UserService;
-import com.internshop.utils.JwtUtil;
+import com.internshop.dto.LoginRequestDTO;
+import com.internshop.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,38 +14,17 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
-        String username = loginData.get("username");
-        String password = loginData.get("password");
-
-        if (username == null || password == null) {
-            return ResponseEntity.badRequest().body("Username and password must be provided");
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
+        try {
+            Map<String, Object> response = authService.login(request.getUsername(), request.getPassword());
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (SecurityException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
         }
-
-        User user = userService.findByUsername(username);
-        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
-
-        String token = jwtUtil.generateToken(user.getUsername());
-
-        UserDTO userDto = new UserDTO();
-        userDto.setId(user.getId());
-        userDto.setUsername(user.getUsername());
-
-        return ResponseEntity.ok(Map.of(
-                "token", token,
-                "user", userDto
-        ));
     }
-
 }

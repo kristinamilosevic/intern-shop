@@ -1,6 +1,7 @@
 package com.internshop.controller;
 
 import com.internshop.dto.*;
+import com.internshop.mapper.AdMapper;
 import com.internshop.model.Ad;
 import com.internshop.model.Category;
 import com.internshop.model.User;
@@ -22,45 +23,18 @@ import org.springframework.data.domain.PageRequest;
 public class AdController {
 
     private final AdService adService;
+    private final AdMapper adMapper;
 
-    public AdController(AdService adService) {
+    public AdController(AdService adService, AdMapper adMapper) {
         this.adService = adService;
+        this.adMapper = adMapper;
     }
-
     @PostMapping
     public ResponseEntity<AdDTO> createAd(@RequestBody CreateAdDTO dto) {
-        System.out.println("Received CreateAdDTO: " + dto);
-        Ad ad = new Ad();
-        ad.setTitle(dto.getTitle());
-        ad.setDescription(dto.getDescription());
-        ad.setPrice(dto.getPrice());
-        ad.setPostedDate(LocalDate.now());
-        ad.setCategory(dto.getCategory());
-        ad.setCity(dto.getCity());
-        ad.setImageUrl(dto.getImageUrl());
-
-        User user = new User();
-        if (dto.getUser() != null) {
-            user.setId(dto.getUser().getId());
-            user.setUsername(dto.getUser().getUsername());
-        }
-        ad.setUser(user);
-
+        Ad ad = adMapper.toEntity(dto);
         Ad saved = adService.saveAd(ad);
-        System.out.println("Saved ad with ID: " + saved.getId());
-        AdDTO response = new AdDTO();
-        response.setId(saved.getId());
-        response.setTitle(saved.getTitle());
-        response.setDescription(saved.getDescription());
-        response.setPrice(saved.getPrice());
-        response.setPostedDate(saved.getPostedDate());
-        response.setCategory(saved.getCategory());
-        response.setUserId(saved.getUser().getId());
-        response.setActive(saved.isActive());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(adMapper.toAdDTO(saved));
     }
-
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllAds(
             @RequestParam(defaultValue = "0") int page,
@@ -71,45 +45,28 @@ public class AdController {
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) Long userId
     ) {
-        try {
-            Pageable paging = PageRequest.of(page, size, org.springframework.data.domain.Sort.by("postedDate").descending());
-            Page<Ad> pageAds = adService.getFilteredAds(title, category, minPrice, maxPrice, userId, paging);
+        Pageable paging = PageRequest.of(page, size, org.springframework.data.domain.Sort.by("postedDate").descending());
+        Page<Ad> pageAds = adService.getFilteredAds(title, category, minPrice, maxPrice, userId, paging);
 
-            List<AdWithUserPublicDTO> adsDto = pageAds.getContent().stream().map(ad -> {
-                UserPublicDTO userDto = new UserPublicDTO();
-                userDto.setId(ad.getUser().getId());
-                userDto.setUsername(ad.getUser().getUsername());
-                userDto.setRegistrationDate(ad.getUser().getRegistrationDate());
-                userDto.setPhoneNumber(ad.getUser().getPhoneNumber());
+        List<AdWithUserPublicDTO> adsDto = pageAds.getContent().stream()
+                .map(adMapper::toAdWithUserPublicDTO)
+                .toList();
 
-                AdWithUserPublicDTO adDto = new AdWithUserPublicDTO();
-                adDto.setId(ad.getId());
-                adDto.setTitle(ad.getTitle());
-                adDto.setDescription(ad.getDescription());
-                adDto.setImageUrl(ad.getImageUrl());
-                adDto.setCity(ad.getCity());
-                adDto.setPrice(ad.getPrice());
-                adDto.setPostedDate(ad.getPostedDate());
-                adDto.setCategory(ad.getCategory());
-                adDto.setUser(userDto);
-                adDto.setActive(ad.isActive());
+        Map<String, Object> response = new HashMap<>();
+        response.put("ads", adsDto);
+        response.put("currentPage", pageAds.getNumber());
+        response.put("totalItems", pageAds.getTotalElements());
+        response.put("totalPages", pageAds.getTotalPages());
 
-                return adDto;
-            }).toList();
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("ads", adsDto);
-            response.put("currentPage", pageAds.getNumber());
-            response.put("totalItems", pageAds.getTotalElements());
-            response.put("totalPages", pageAds.getTotalPages());
-
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        return ResponseEntity.ok(response);
     }
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<AdWithUserDTO> getAdById(@PathVariable Long id) {
+        return adService.getAdById(id)
+                .map(ad -> ResponseEntity.ok(adMapper.toAdWithUserDTO(ad)))
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<?> deactivateAd(@PathVariable Long id) {
@@ -119,31 +76,6 @@ public class AdController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<AdWithUserDTO> getAdById(@PathVariable Long id) {
-        return adService.getAdById(id)
-                .map(ad -> {
-                    UserPublicDTO userDto = new UserPublicDTO();
-                    userDto.setUsername(ad.getUser().getUsername());
-                    userDto.setPhoneNumber(ad.getUser().getPhoneNumber());
-
-                    AdWithUserDTO dto = new AdWithUserDTO();
-                    dto.setId(ad.getId());
-                    dto.setTitle(ad.getTitle());
-                    dto.setDescription(ad.getDescription());
-                    dto.setImageUrl(ad.getImageUrl());
-                    dto.setPrice(ad.getPrice());
-                    dto.setCity(ad.getCity());
-                    dto.setPostedDate(ad.getPostedDate());
-                    dto.setCategory(ad.getCategory());
-                    dto.setUser(userDto);
-                    dto.setActive(ad.isActive());
-
-                    return ResponseEntity.ok(dto);
-                })
-                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
@@ -162,8 +94,6 @@ public class AdController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
-
-
 }
 
 

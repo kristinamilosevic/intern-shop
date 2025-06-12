@@ -25,8 +25,6 @@ public class JwtUtil {
     }
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
-//    Add DTOs
-
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)

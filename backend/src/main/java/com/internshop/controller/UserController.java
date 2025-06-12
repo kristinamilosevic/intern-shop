@@ -1,6 +1,10 @@
 package com.internshop.controller;
 
+import com.internshop.dto.CreateUserDTO;
+import com.internshop.mapper.AdMapper;
+import com.internshop.mapper.UserMapper;
 import com.internshop.model.User;
+import com.internshop.service.AdService;
 import com.internshop.service.UserService;
 import com.internshop.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,49 +22,22 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    private final UserMapper userMapper;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    public UserController( UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
 
     @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        if (user.getUsername() == null || user.getPassword() == null || user.getPhoneNumber() == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Username, password and phone number are required."));
-        }
-
+    public ResponseEntity<?> createUser(@RequestBody CreateUserDTO dto) {
         try {
-            String passwordError = ValidationUtils.validatePassword(user.getPassword());
-            if (passwordError != null) {
-                return ResponseEntity.badRequest().body(Map.of("message", passwordError));
-            }
-
-            String usernameError = ValidationUtils.validateUsername(user.getUsername());
-            if (usernameError != null) {
-                return ResponseEntity.badRequest().body(Map.of("message", usernameError));
-            }
-
-            if (userService.usernameExists(user.getUsername())) {
-                return ResponseEntity.badRequest().body(Map.of("message", "Username already exists"));
-            }
-
-            String phoneError = ValidationUtils.validatePhone(user.getPhoneNumber());
-            if (phoneError != null) {
-                return ResponseEntity.badRequest().body(Map.of("message", phoneError));
-            }
-
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-            if (user.getRegistrationDate() == null) {
-                user.setRegistrationDate(LocalDate.now());
-            }
-
-            user.setUsername(ValidationUtils.sanitizeInput(user.getUsername()));
-            user.setPhoneNumber(ValidationUtils.sanitizeInput(user.getPhoneNumber()));
-            User savedUser = userService.saveUser(user);
-
-            return ResponseEntity.ok(savedUser);
-        } catch (Exception e) {
+            User user = userService.createUser(dto);
+            return ResponseEntity.ok(userMapper.toDTO(user));
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("message", "Something went wrong"));
         }
     }
 
