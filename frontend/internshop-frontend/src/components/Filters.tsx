@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Categories } from '../models/Categories';
 import { Ad } from '../models/Ad';
 import { fetchAds } from '../services/adService';
+import { useDebounce } from '../hooks/useDebounce';
 
 interface FiltersProps {
   onAdsFetched: (ads: Ad[], totalPages: number) => void;
@@ -12,6 +13,7 @@ interface FiltersProps {
 const Filters = ({ onAdsFetched, currentPage, currentUserId }: FiltersProps) => {
   const [selectedCategory, setSelectedCategory] = useState<Categories | null>(null);
   const [searchTitle, setSearchTitle] = useState<string>('');
+  const debouncedSearchTitle = useDebounce(searchTitle);
   const [minPrice, setMinPrice] = useState<number | null>(null);
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
   const [showMineOnly, setShowMineOnly] = useState<boolean>(false);
@@ -19,12 +21,16 @@ const Filters = ({ onAdsFetched, currentPage, currentUserId }: FiltersProps) => 
   useEffect(() => {
     const loadAds = async () => {
       try {
+        if (debouncedSearchTitle && debouncedSearchTitle.length < 3) {
+          return;
+        }
+
         const userId = showMineOnly ? currentUserId : null;
 
         const { ads, totalPages } = await fetchAds(
           currentPage,
           selectedCategory,
-          searchTitle,
+          debouncedSearchTitle,
           minPrice,
           maxPrice,
           userId
@@ -36,7 +42,7 @@ const Filters = ({ onAdsFetched, currentPage, currentUserId }: FiltersProps) => 
     };
 
     loadAds();
-  }, [currentPage, selectedCategory, searchTitle, minPrice, maxPrice, showMineOnly]);
+  }, [currentPage, selectedCategory, debouncedSearchTitle, minPrice, maxPrice, showMineOnly]);
 
   return (
     <div className="mb-6 p-4 rounded shadow-sm max-w-4xl mx-auto">

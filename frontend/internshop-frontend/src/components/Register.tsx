@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "../models/User";
-import { registerUser } from "../services/userService";
 import Button from "../components/Buttons";
+import { registerUser } from "../services/authService";
 
 const initialUserState: User = {
   id: undefined,

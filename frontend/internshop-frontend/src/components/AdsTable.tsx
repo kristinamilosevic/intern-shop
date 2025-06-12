@@ -12,6 +12,16 @@ interface AdTableProps {
   onEdit?: (adId: number) => void;
 }
 
+const tableColumns = [
+  { label: "Image", value: "imageUrl" },
+  { label: "Title", value: "title" },
+  { label: "Description", value: "description" },
+  { label: "Price", value: "price" },
+  { label: "City", value: "city" },
+  { label: "Category", value: "category" },
+  { label: "Posted", value: "datePosted" },
+];
+
 const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
   const [ads, setAds] = useState<Ad[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -21,7 +31,7 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
 
   useEffect(() => {
     loadAds(currentPage,);
-  }, [currentPage, ]);  
+  }, [currentPage]);  
 
   const loadAds = async (
     page: number,
@@ -84,19 +94,8 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
     }
   };
 
-  const tableColumns = [
-    { label: "Image", value: "imageUrl" },
-    { label: "Title", value: "title" },
-    { label: "Description", value: "description" },
-    { label: "Price", value: "price" },
-    { label: "City", value: "city" },
-    { label: "Category", value: "category" },
-    { label: "Posted", value: "datePosted" },
-  ];
-
   return (
     <div className="overflow-x-auto mt-4">
-
       <Filters
         currentPage={currentPage}
         currentUserId={currentUserId}
@@ -151,7 +150,7 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
                     year: "numeric",
                   }) : "-"}
                 </td>
-                <td className="p-3 space-x-2">
+                <td className="flex p-3 space-x-2">
                   {isOwner && (
                     <>
                       <Button variant="primary" size="small" onClick={() => handleEditClick(ad)}>Edit</Button>
