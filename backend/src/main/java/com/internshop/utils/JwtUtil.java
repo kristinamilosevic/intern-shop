@@ -25,6 +25,8 @@ public class JwtUtil {
     }
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
+//    Add DTOs
+
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -33,5 +35,18 @@ public class JwtUtil {
                 .signWith(this.key)
                 .compact();
     }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
 }
