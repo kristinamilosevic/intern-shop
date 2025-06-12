@@ -107,7 +107,7 @@ const AdTable: React.FC<AdTableProps> = ({ currentUserId, onEdit }) => {
       />
 
       <table className="min-w-full border border-[#D5C7A3] bg-[#F6F0F0] shadow rounded-lg">
-        <thead className="bg-[#F2E2B1] text-[#5C533F]">
+        <thead className="bg-[#F2E2B1] text-[#8E806A]">
           <tr>
             {tableColumns.map((col) => (
               <th key={col.value} className="p-3 text-left">

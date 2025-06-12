@@ -7,7 +7,11 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
   return (
     <div className="mt-4 flex justify-center space-x-2">
       <Button
@@ -16,23 +20,23 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
         onClick={() => onPageChange(Math.max(currentPage - 1, 0))}
         disabled={currentPage === 0}
         className="disabled:opacity-50"
-        >
+      >
         Previous
       </Button>
-        {[...Array(totalPages)].map((_, i) => (
-      <Button
-        key={i}
-        size="small"
-        onClick={() => onPageChange(i)}
-        className={`${
-        currentPage === i
-            ? "bg-[#5C533F] text-white font-bold"
-            : "bg-[#F2E2B1] text-[#5C533F] hover:bg-[#D5C7A3]"
-        }`}
-      >
-        {i + 1}
-      </Button>
-        ))}
+
+      {[...Array(totalPages)].map((_, i) => (
+        <Button
+          key={i}
+          size="small"
+          variant={currentPage === i ? "primary" : "secondary"}
+          onClick={() => onPageChange(i)}
+          disabled={currentPage === i}
+          className={currentPage === i ? "font-bold opacity-100" : ""}
+        >
+          {i + 1}
+        </Button>
+      ))}
+
       <Button
         variant="primary"
         size="small"
@@ -42,8 +46,8 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
       >
         Next
       </Button>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Pagination;

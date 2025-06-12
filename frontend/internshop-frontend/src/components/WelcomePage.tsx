@@ -18,8 +18,8 @@ const WelcomePage: React.FC = () => {
         className="w-[500px] h-auto object-cover flex-shrink-0"
       />
       <div className="flex-1 text-left text-[#5C533F]">
-        <h1 className="text-[3rem] mb-[20px] font-bold text-[#BDB395]">Sell&Buy</h1>
-        <p className="text-[1.8rem] mb-[25px] font-semibold text-[#D5C7A3]">
+        <h1 className="text-[3rem] mb-[20px] font-bold text-[#8E806A]">Sell&Buy</h1>
+        <p className="text-[1.8rem] mb-[25px] font-semibold text-[#C3B091]">
           Your trusted marketplace
         </p>
         <p className="text-[1.2rem] leading-[1.6] mb-[30px] text-[#8C7B55]">

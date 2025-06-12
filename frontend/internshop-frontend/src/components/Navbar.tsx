@@ -87,18 +87,22 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <a
-                  href="/login"
-                  className="bg-[#C3B091] text-[#F6F0F0] px-3 py-1 rounded no-underline hover:bg-[#b0a67e] transition"
-                >
-                  Login
-                </a>
-                <a
-                  href="/register"
-                  className="bg-[#C3B091] text-[#F6F0F0] px-3 py-1 rounded no-underline hover:bg-[#b0a67e] transition"
-                >
-                  Sign Up
-                </a>
+                <div className="flex gap-2">
+                  <Button
+                    variant="primary"
+                    size="small"
+                    onClick={() => navigate("/login")}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="small"
+                    onClick={() => navigate("/register")}
+                  >
+                    Sign Up
+                  </Button>
+                </div>
               </>
             )}
           </div>

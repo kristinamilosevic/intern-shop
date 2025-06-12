@@ -21,7 +21,7 @@ const Home: React.FC = () => {
         const userId = await fetchUserIdByUsername(username); 
         setCurrentUserId(userId);
       } catch (error) {
-        console.error("Greška pri dohvatanju ID-ja korisnika:", error);
+        console.error("Error fetching user ID:", error);
       } finally {
         setLoading(false);
       }
