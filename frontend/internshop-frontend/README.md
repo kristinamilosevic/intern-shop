@@ -1,3 +1,7 @@
+# Images 
+
+### All uploaded images are stored in the public/images folder. The backend stores only the image filename in the database (not the full path).
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
