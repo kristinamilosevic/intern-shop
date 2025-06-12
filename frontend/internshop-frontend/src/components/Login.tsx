@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Buttons";
+import { login } from "../services/authService";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -11,35 +12,19 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setError(null);
     setSuccess(null);
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (!response.ok) {
-        const msg = await response.text();
-        setError(msg || "Login failed");
-        return;
-      }
-
-      const data = await response.json();
-
+      const data = await login(username, password);
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", data.user.username);
 
       setSuccess("Login successful!");
       navigate("/");
       window.dispatchEvent(new Event("storage"));
-    } catch (err) {
-      setError("Error connecting to the server");
+    } catch (err: any) {
+      setError(err.message || "Error connecting to the server");
     }
   };
 
@@ -52,15 +37,11 @@ const Login: React.FC = () => {
       )}
 
       {success && (
-        <p className="text-center text-[#388E3C] mb-[20px] font-semibold">
-          {success}
-        </p>
+        <p className="text-center text-[#388E3C] mb-[20px] font-semibold">{success}</p>
       )}
 
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username" className="font-semibold block mb-[6px]">
-          Username
-        </label>
+        <label htmlFor="username" className="font-semibold block mb-[6px]">Username</label>
         <input
           id="username"
           name="username"
@@ -71,9 +52,7 @@ const Login: React.FC = () => {
           className="w-full p-[10px] mb-[18px] rounded-[8px] border-[1.5px] border-[#D5C7A3] bg-[#F2E2B1] text-[#5C533F] text-base focus:outline-none focus:border-[#BDB395] transition-colors"
         />
 
-        <label htmlFor="password" className="font-semibold block mb-[6px]">
-          Password
-        </label>
+        <label htmlFor="password" className="font-semibold block mb-[6px]">Password</label>
         <input
           id="password"
           name="password"
@@ -86,13 +65,22 @@ const Login: React.FC = () => {
 
         <Button
           type="submit"
-          variant="primary" 
-          size="large"     
-          className="w-full font-bold text-[1.1rem] py-[12px] rounded-[10px] cursor-pointer shadow-[0_5px_12px_rgba(189,179,149,0.6)]" // Dodajemo specifične klase
+          variant="primary"
+          size="large"
+          className="w-full font-bold text-[1.1rem] py-[12px] rounded-[10px] cursor-pointer shadow-[0_5px_12px_rgba(189,179,149,0.6)]"
         >
           Login
         </Button>
       </form>
+      <div className="text-center mt-4 text-[#5C533F]">
+        <span>Don't have an account? </span>
+        <a
+          href="/register"
+          className="text-[#388E3C] font-semibold hover:underline"
+        >
+          Register
+        </a>
+      </div>
     </div>
   );
 };

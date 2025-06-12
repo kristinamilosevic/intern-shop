@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdsTable from "./AdsTable";
 import WelcomePage from "./WelcomePage";
 import { fetchUserIdByUsername } from "../services/userService";
+import Loader from "../components/Loader";
 
 const Home: React.FC = () => {
   const isLoggedIn = !!localStorage.getItem("token");
@@ -34,11 +35,7 @@ const Home: React.FC = () => {
   }, [isLoggedIn, username]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-[60vh] text-[#BDB395] font-semibold text-xl">
-        Loading...
-      </div>
-    );
+    return <Loader />;
   }
 
   if (isLoggedIn && currentUserId !== null) {

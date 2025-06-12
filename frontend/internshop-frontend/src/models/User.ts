@@ -3,5 +3,5 @@ export type User = {
   username?: string;
   password?: string;
   registrationDate?: string;
-  phone?: string;
+  phoneNumber?: string;
 };

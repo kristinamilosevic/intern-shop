@@ -9,7 +9,7 @@ const initialUserState: User = {
   username: "",
   password: "",
   registrationDate: "",
-  phone: "",
+  phoneNumber: "",
 };
 
 const Register: React.FC = () => {
@@ -23,7 +23,7 @@ const Register: React.FC = () => {
   };
 
   const areFieldsValid = () => {
-    return user.username !== "" && user.password !== "" && user.phone !== "";
+    return user.username !== "" && user.password !== "" && user.phoneNumber !== "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,12 +44,13 @@ const Register: React.FC = () => {
         navigate("/login");
       }, 1500);
     } catch (error: any) {
-      if (error.response && error.response.data) {
-        setMessage(error.response.data);
+      console.log(error);
+      if (error.message) {
+        setMessage(error.message);
       } else {
         setMessage("An error occurred while registering.");
       }
-    }
+    }    
   };
 
   return (
@@ -94,13 +95,13 @@ const Register: React.FC = () => {
           className="w-full px-3 py-2 mb-5 rounded-lg border-2 border-[#D5C7A3] bg-[#F2E2B1] text-[#5C533F] text-base outline-none focus:border-[#BDB395] transition"
         />
 
-        <label htmlFor="phone" className="block font-semibold mb-1">
+        <label htmlFor="phoneNumber" className="block font-semibold mb-1">
           Phone
         </label>
         <input
-          id="phone"
-          name="phone"
-          value={user.phone}
+          id="phoneNumber"
+          name="phoneNumber"
+          value={user.phoneNumber}
           onChange={handleChange}
           className="w-full px-3 py-2 mb-7 rounded-lg border-2 border-[#D5C7A3] bg-[#F2E2B1] text-[#5C533F] text-base outline-none focus:border-[#BDB395] transition"
         />
@@ -113,6 +114,15 @@ const Register: React.FC = () => {
         >
           Sign Up
         </Button>
+        <div className="text-center mt-4 text-[#5C533F]">
+          <span>Already have an account? </span>
+          <a
+            href="/login"
+            className="text-[#388E3C] font-semibold hover:underline"
+          >
+            Login
+          </a>
+        </div>
       </form>
     </div>
   );

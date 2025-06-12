@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CreateAd from "./CreateAd";
 import { Ad } from "../models/Ad"; 
 import Button from "../components/Buttons";
@@ -6,6 +7,7 @@ import Button from "../components/Buttons";
 const Navbar: React.FC = () => {
   const [user, setUser] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const updateUserFromStorage = () => {
@@ -30,7 +32,7 @@ const Navbar: React.FC = () => {
     localStorage.removeItem("username");
     localStorage.removeItem("token");
     setUser(null);
-    window.location.reload();
+    navigate("/login");
   };
 
   const openModal = () => setIsModalOpen(true);

@@ -1,8 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import homeImage from "../assets/home.jpg";
 import Button from "../components/Buttons";
 
 const WelcomePage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleSignUpClick = () => {
+    navigate("/register");
+  };
+
   return (
     <div className="max-w-[900px] mx-auto my-[60px] p-5 flex items-center gap-[40px] font-sans rounded-[12px]">
       <img
@@ -22,7 +29,7 @@ const WelcomePage: React.FC = () => {
         <Button
           variant="primary"
           size="medium"
-          onClick={() => (window.location.href = "/register")}
+          onClick={handleSignUpClick}
           className="bg-[#BDB395] text-[#F6F0F0] border-none px-7 py-[14px] rounded-[8px] text-[1.1rem] cursor-pointer shadow-[0_4px_10px_rgba(189,179,149,0.6)] transition-colors duration-300 hover:bg-[#D5C7A3]"
         >
           Sign Up Now

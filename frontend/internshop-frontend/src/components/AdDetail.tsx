@@ -140,6 +140,16 @@ const AdDetail: React.FC = () => {
           <span className="font-semibold text-[#A08439]">Category:</span>{" "}
           {ad.category || "-"}
         </p>
+        <p>
+          <span className="font-semibold text-[#A08439]">Posted Date:</span>{" "}
+          {ad.postedDate
+            ? new Date(ad.postedDate).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })
+            : "-"}
+        </p>
       </div>
 
       <div className="mt-8 p-6 border border-[#D5C7A3] rounded-lg bg-[#FBF9F3] shadow-md max-w-md mx-auto text-[#5C533F]">
@@ -153,7 +163,7 @@ const AdDetail: React.FC = () => {
           </p>
           <p className="flex items-center justify-start space-x-3">
             <strong className="w-24">Phone:</strong>
-            <span>{ad.user?.phone || "Not provided"}</span>
+            <span>{ad.user?.phoneNumber || "Not provided"}</span>
           </p>
         </div>
       </div>

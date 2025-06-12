@@ -10,7 +10,7 @@ interface EditAdProps {
   onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
-
+// TODO: aks AI what is better approact to do same thing without passing all these props (handlers in AdsTable and AdDetails) -> onClose, onChange, onImageChange etc
 const EditAd: React.FC<EditAdProps> = ({
   selectedAd,
   onClose,

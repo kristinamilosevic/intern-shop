@@ -3,19 +3,23 @@ import { Ad } from "../models/Ad";
 import { Categories } from "../models/Categories";
 import { fetchUserIdByUsername } from "../services/userService";
 import Button from "../components/Buttons";
+import { saveAd } from "../services/adService"; 
+import { useNavigate } from "react-router-dom";
 
-interface Props {
+interface AdFormProps  {
   isOpen: boolean;
   onClose: () => void;
   onSave: (ad: Ad) => void;
 }
 
-const AdForm: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
+const AdForm: React.FC<AdFormProps> = ({ isOpen, onClose, onSave }) => {
+  //TODO: Partial is not very common, prepare to explain why you used it
   const [formData, setFormData] = useState<Partial<Ad>>({});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
+  
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -35,58 +39,24 @@ const AdForm: React.FC<Props> = ({ isOpen, onClose, onSave }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  
-    const imageUrl = imageFile ? imageFile.name : "";
-    const username = localStorage.getItem("username");
-  
+
     try {
-      if (!username) {
-        throw new Error("Nema korisničkog imena u localStorage-u.");
-      }
-  
-      const userId = await fetchUserIdByUsername(username);
-  
-      const adPayload: Ad = {
-        id: null,
-        title: formData.title || "",
-        description: formData.description || "",
-        price: Number(formData.price) || 0,
-        city: formData.city || "",
-        category: formData.category || "",
-        datePosted: new Date().toISOString(),
-        imageUrl,
-        user: {
-          id: userId,
-          username: "",
-          password: "",
-          registrationDate: "",
-          phone: ""
-        },
-      };
-  
-      const response = await fetch("/api/ads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(adPayload),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Greška prilikom čuvanja oglasa.");
-      }
-  
-      const savedAd: Ad = await response.json();
+      const imageUrl = imageFile ? imageFile.name : "";
+      const adToSave = { ...formData, imageUrl };
+
+      const savedAd = await saveAd(adToSave);
+
       onSave(savedAd);
       setFormData({});
       setImageFile(null);
       onClose();
+      navigate("/");
     } catch (err: any) {
       setError(err.message || "Nepoznata greška.");
     } finally {
       setLoading(false);
     }
-  };  
+  };
 
   if (!isOpen) return null;
 

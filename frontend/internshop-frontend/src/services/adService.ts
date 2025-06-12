@@ -1,5 +1,6 @@
 import { Ad } from "../models/Ad";
 import { Categories } from "../models/Categories";
+import { fetchUserIdByUsername } from "./userService";
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const API_URL = `${BASE_URL}/ads`; 
@@ -98,3 +99,43 @@ export const fetchAdById = async (id: number): Promise<Ad> => {
 
   return await response.json();
 };
+
+export async function saveAd(adData: Partial<Ad>): Promise<Ad> {
+  const username = localStorage.getItem("username");
+  if (!username) {
+    throw new Error("Nema korisničkog imena u localStorage-u.");
+  }
+
+  const userId = await fetchUserIdByUsername(username);
+
+  const adPayload: Ad = {
+    id: null,
+    title: adData.title || "",
+    description: adData.description || "",
+    price: Number(adData.price) || 0,
+    city: adData.city || "",
+    category: adData.category || "",
+    postedDate: new Date().toISOString(),
+    imageUrl: adData.imageUrl || "",
+    user: {
+      id: userId,
+      username: "",
+      phoneNumber: "",
+    },
+  };
+
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(adPayload),
+  });
+
+  if (!response.ok) {
+    throw new Error("Greška prilikom čuvanja oglasa.");
+  }
+
+  return response.json();
+}

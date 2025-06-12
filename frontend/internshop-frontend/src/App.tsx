@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
 import AdDetail from "./components/AdDetail";
+import ProtectedRoute from "./components/ProtectedRoute ";
 
 const App: React.FC = () => {
   return (
@@ -16,8 +17,9 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/adDetail/:id" element={<AdDetail />} />
-          <Route path="*" element={<div>Stranica nije pronađena.</div>} />
+          <Route
+            path="/adDetail/:id" element={<ProtectedRoute><AdDetail /></ProtectedRoute>}/>
+          <Route path="*" element={<div>Page not found.</div>} />
         </Routes>
       </div>
       <Footer />
